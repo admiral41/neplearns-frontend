@@ -1,6 +1,7 @@
 import axios from "axios";
 
-export const baseURL = "http://localhost:5000";
+// export const baseURL = "http://localhost:5000";
+export const baseURL = "https://api.neplearns.com";
 
 // Create a base axios instance
 const api = axios.create({
@@ -59,7 +60,7 @@ export const getStats = async () => Api.get('/api/auth/stats');
 // Teacher Dashboard
 export const createCourse = async (formData) => Apis.post("/api/courses/add", formData);
 export const getTeacherCourses = async () => Apis.get("/api/courses/me");
-export const addLesson = async (formData) => Apis.post("/api/lessons/add", formData);
+export const addLesson = async (formData) => Api.post("/api/lessons/add", formData);
 export const getTeacherCourse = async (slug) => Apis.get(`/api/courses/${slug}`);
 export const getLessonsByCourse = async (courseId) => Api.get(`/api/lessons/course/${courseId}`);
 export const getLessonsByCourses = async (courseId) => Api.get(`/api/course/${courseId}`);
