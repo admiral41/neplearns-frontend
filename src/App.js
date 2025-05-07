@@ -21,14 +21,15 @@ import ManageUser from './components/admin/ManageUser';
 import ManageTeacher from './components/admin/ManageTeacher';
 import TeacherOverview from './components/teacher/TeacherOverview';
 import CreateCourse from './components/teacher/CreateCourse';
-import LessonManager from './components/teacher/AddLessonForm';
+import LessonManager from './components/teacher/StudentManager';
 import CourseManagePage from './components/teacher/coursemange/CourseManage';
 import AddLessonPage from './components/teacher/coursemange/AddLessonPage';
 import EditLessonPage from './components/teacher/edit-lessons/EditLessonPage';
-import InvoicePage from './pages/invoice';
 import QuizBuilder from './components/teacher/coursemange/ManagePage/pages/QuizBuilder';
 import AddAssignmentPage from './components/teacher/coursemange/ManagePage/pages/AddAssignmentPage';
 import LessonDetail from './pages/LessonDetail';
+import StudentOverview from './components/student-dashboard/StudentOverview';
+import YourCoursesPage from './components/student-dashboard/YourCoursesPage';
 function App() {
   return (
     <>
@@ -61,7 +62,7 @@ function App() {
             </ProtectedRoute>
           }>
             <Route path="dashboard" element={<TeacherOverview />} />
-            <Route path="create-course" element={<LessonManager />} />
+            <Route path="manage-students" element={<LessonManager />} />
             <Route path="courses" element={<CreateCourse />} />
             <Route path="courses/:slug" element={<CourseManagePage />} />
             <Route path="courses/:slug/add-lesson" element={<AddLessonPage />} />
@@ -70,11 +71,16 @@ function App() {
             <Route path="courses/:slug/add-assignment" element={<AddAssignmentPage />} />
 
           </Route>
-          <Route path="/student/dashboard" element={
+          <Route path="/student" element={
             <ProtectedRoute allowedRoles={['Student']}>
               <StudentDashboard />
             </ProtectedRoute>
-          } />
+          } >
+          <Route path="dashboard" element={<StudentOverview />} />
+          <Route path="courses" element={<YourCoursesPage />} />
+
+          </Route>
+
         </Routes>
         <Footer />
       </AuthProvider>

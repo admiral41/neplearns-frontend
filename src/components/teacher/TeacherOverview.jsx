@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BookOpen, Users, FileText, BarChart, ClipboardCheck, ArrowUpRight, Clock } from 'lucide-react';
+import axios from 'axios';
+import { getTeacherCourses } from '../../api/apis';
 
 const StatCard = ({ icon, title, value, trend }) => {
   const trendColor = trend >= 0 ? 'text-emerald-600' : 'text-rose-600';
@@ -54,64 +56,154 @@ const ActivityItem = ({ activity }) => (
   </div>
 );
 
-const CourseCard = ({ course }) => (
-  <div className="bg-white p-6 rounded-2xl border border-gray-100 hover:shadow-lg transition-all duration-300">
-    <div className="flex items-center justify-between mb-4">
-      <div className="flex items-center gap-3">
-        <div className="p-3 bg-blue-100 rounded-xl text-blue-600">
-          <BookOpen className="w-6 h-6" />
+const CourseCard = ({ course }) => {
+  const completionRate = course.enrolledStudents && course.lessons 
+    ? Math.round((course.enrolledStudents.length / (course.lessons.length * 10)) * 100) 
+    : 0;
+
+  return (
+    <div className="bg-white p-6 rounded-2xl border border-gray-100 hover:shadow-lg transition-all duration-300">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <div className="p-3 bg-blue-100 rounded-xl text-blue-600">
+            <BookOpen className="w-6 h-6" />
+          </div>
+          <div>
+            <h3 className="font-semibold text-gray-900">{course.title}</h3>
+            <p className="text-sm text-gray-500">{course.tags?.join(', ')}</p>
+          </div>
         </div>
-        <div>
-          <h3 className="font-semibold text-gray-900">{course.name}</h3>
-          <p className="text-sm text-gray-500">{course.category}</p>
-        </div>
-      </div>
-      <span className="text-sm px-2 py-1 bg-gray-100 rounded-md text-gray-600">
-        {course.lessons} lessons
-      </span>
-    </div>
-    
-    <div className="space-y-4">
-      <div className="flex justify-between text-sm">
-        <span className="text-gray-500">Enrollment</span>
-        <span className="font-medium text-gray-900">{course.students} students</span>
+        <span className="text-sm px-2 py-1 bg-gray-100 rounded-md text-gray-600">
+          {course.lessons?.length || 0} lessons
+        </span>
       </div>
       
-      <div className="space-y-2">
+      <div className="space-y-4">
         <div className="flex justify-between text-sm">
-          <span className="text-gray-500">Completion rate</span>
-          <span className="font-medium text-gray-900">{course.completion}%</span>
+          <span className="text-gray-500">Enrollment</span>
+          <span className="font-medium text-gray-900">
+            {course.enrolledStudents?.length || 0} students
+          </span>
         </div>
-        <div className="w-full bg-gray-100 rounded-full h-2">
-          <div
-            className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-full h-2 transition-all duration-500"
-            style={{ width: `${course.completion}%` }}
-          />
+        
+        <div className="space-y-2">
+          <div className="flex justify-between text-sm">
+            <span className="text-gray-500">Completion rate</span>
+            <span className="font-medium text-gray-900">{completionRate}%</span>
+          </div>
+          <div className="w-full bg-gray-100 rounded-full h-2">
+            <div
+              className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-full h-2 transition-all duration-500"
+              style={{ width: `${completionRate}%` }}
+            />
+          </div>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const TeacherDashboard = () => {
   const [activeTab, setActiveTab] = useState('activity');
-  const [courses] = useState([
-    { id: 1, name: 'Advanced React Patterns', category: 'Frontend Development', lessons: 24, students: 245, completion: 82 },
-    { id: 2, name: 'Cloud Architecture', category: 'DevOps', lessons: 18, students: 168, completion: 68 },
-    { id: 3, name: 'UI/UX Masterclass', category: 'Design', lessons: 32, students: 324, completion: 91 },
-  ]);
+  const [courses, setCourses] = useState([]);
+  const [activities, setActivities] = useState([]);
+  const [students, setStudents] = useState([]);
+  const [stats, setStats] = useState({
+    totalCourses: 0,
+    activeStudents: 0,
+    completionRate: 0,
+    avgQuizzes: 0
+  });
+  const [loading, setLoading] = useState(true);
 
-  const [activities] = useState([
-    { type: 'enrollment', description: '15 new students enrolled in UI/UX Masterclass', date: '45 minutes ago' },
-    { type: 'lesson', description: 'New lesson published: "Advanced Prototyping Techniques"', date: '2 hours ago' },
-    { type: 'enrollment', description: 'Enterprise team enrollment (25 seats) in Cloud Architecture', date: '4 hours ago' },
-  ]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        
+        // Fetch teacher's courses
+        const coursesRes = await getTeacherCourses();
+        setCourses(coursesRes.data.data);
+        
+        // Calculate stats
+        const totalCourses = coursesRes.data.data.length;
+        const activeStudents = coursesRes.data.data.reduce(
+          (sum, course) => sum + (course.enrolledStudents?.length || 0), 0
+        );
+        
+        // Mock activities based on enrollment requests
+        const activitiesData = coursesRes.data.data.flatMap(course => {
+          const courseActivities = [];
+          if (course.enrollmentRequests?.length > 0) {
+            courseActivities.push({
+              type: 'enrollment',
+              description: `${course.enrollmentRequests.length} new enrollment requests for ${course.title}`,
+              date: 'Recently'
+            });
+          }
+          if (course.lessons?.length > 0) {
+            courseActivities.push({
+              type: 'lesson',
+              description: `${course.lessons.length} lessons in ${course.title}`,
+              date: 'Recently'
+            });
+          }
+          return courseActivities;
+        });
+        setActivities(activitiesData.slice(0, 3));
+        
+        // Mock students data from enrolled students
+        const studentsData = coursesRes.data.data.flatMap(course => 
+          course.enrolledStudents?.map((student, index) => ({
+            id: student._id || index,
+            name: student.name || `Student ${index + 1}`,
+            course: course.title,
+            progress: Math.floor(Math.random() * 50) + 50, // Random progress 50-100%
+            quizzes: Math.floor(Math.random() * 30) + 70, // Random quiz scores 70-100%
+            avatar: student.profilePicture || '👨‍🎓'
+          })) || []
+        );
+        setStudents(studentsData.slice(0, 3));
+        
+        // Calculate completion rate (mock)
+        const completionRate = Math.round(
+          studentsData.reduce((sum, student) => sum + student.progress, 0) / 
+          Math.max(studentsData.length, 1)
+        );
+        
+        // Calculate avg quizzes (mock)
+        const avgQuizzes = Math.round(
+          studentsData.reduce((sum, student) => sum + student.quizzes, 0) / 
+          Math.max(studentsData.length, 1)
+        );
+        
+        setStats({
+          totalCourses,
+          activeStudents,
+          completionRate,
+          avgQuizzes
+        });
+        
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchData();
+  }, []);
 
-  const [students] = useState([
-    { id: 1, name: 'Sarah Johnson', course: 'React Patterns', progress: 82, quizzes: 92, avatar: '👩🏼💻' },
-    { id: 2, name: 'Michael Chen', course: 'Cloud Architecture', progress: 68, quizzes: 84, avatar: '👨🏽💻' },
-    { id: 3, name: 'Emma Wilson', course: 'UI/UX Masterclass', progress: 91, quizzes: 96, avatar: '👩🏽🎨' },
-  ]);
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 p-8 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -120,7 +212,7 @@ const TeacherDashboard = () => {
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Educator Dashboard</h1>
-            <p className="text-gray-500 mt-1">Welcome back, Professor Anderson</p>
+            <p className="text-gray-500 mt-1">Welcome back, Professor</p>
           </div>
           <div className="flex items-center gap-4">
             <button className="flex items-center gap-2 text-gray-600 hover:text-gray-900">
@@ -135,25 +227,25 @@ const TeacherDashboard = () => {
           <StatCard
             icon={<BookOpen className="w-6 h-6" />}
             title="Total Courses"
-            value="12"
+            value={stats.totalCourses}
             trend={4.2}
           />
           <StatCard
             icon={<Users className="w-6 h-6" />}
             title="Active Students"
-            value="2,458"
+            value={stats.activeStudents}
             trend={12.7}
           />
           <StatCard
             icon={<ClipboardCheck className="w-6 h-6" />}
             title="Completion Rate"
-            value="84%"
+            value={`${stats.completionRate}%`}
             trend={2.1}
           />
           <StatCard
             icon={<BarChart className="w-6 h-6" />}
             title="Avg. Quizzes"
-            value="89%"
+            value={`${stats.avgQuizzes}%`}
             trend={-1.3}
           />
         </div>
@@ -162,7 +254,7 @@ const TeacherDashboard = () => {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
           {/* Tabs Navigation */}
           <div className="flex border-b border-gray-100">
-            {['activity', 'courses', 'students'].map((tab) => (
+            {['activity', 'courses'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -180,73 +272,94 @@ const TeacherDashboard = () => {
           <div className="p-8">
             {activeTab === 'activity' && (
               <div className="space-y-6">
-                {activities.map((activity, index) => (
-                  <ActivityItem key={index} activity={activity} />
-                ))}
+                {activities.length > 0 ? (
+                  activities.map((activity, index) => (
+                    <ActivityItem key={index} activity={activity} />
+                  ))
+                ) : (
+                  <p className="text-gray-500 text-center py-8">No recent activity</p>
+                )}
               </div>
             )}
 
             {activeTab === 'courses' && (
               <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                {courses.map((course) => (
-                  <CourseCard key={course.id} course={course} />
-                ))}
-                <div className="col-span-full flex justify-center mt-6">
-                  <button className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium">
-                    View All Courses
-                    <ArrowUpRight className="w-5 h-5" />
-                  </button>
-                </div>
+                {courses.length > 0 ? (
+                  <>
+                    {courses.map((course) => (
+                      <CourseCard key={course._id} course={course} />
+                    ))}
+                    <div className="col-span-full flex justify-center mt-6">
+                      <button className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium">
+                        View All Courses
+                        <ArrowUpRight className="w-5 h-5" />
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <div className="col-span-full text-center py-8">
+                    <p className="text-gray-500">You haven't created any courses yet</p>
+                    <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                      Create Your First Course
+                    </button>
+                  </div>
+                )}
               </div>
             )}
 
             {activeTab === 'students' && (
               <div className="overflow-hidden rounded-xl border border-gray-100">
-                <table className="w-full">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-4 text-left text-sm font-medium text-gray-500">Student</th>
-                      <th className="px-6 py-4 text-left text-sm font-medium text-gray-500">Course</th>
-                      <th className="px-6 py-4 text-left text-sm font-medium text-gray-500">Progress</th>
-                      <th className="px-6 py-4 text-left text-sm font-medium text-gray-500">Quizzes</th>
-                      <th className="px-6 py-4 text-left text-sm font-medium text-gray-500">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100">
-                    {students.map((student) => (
-                      <tr key={student.id} className="hover:bg-gray-50 transition-colors">
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl">{student.avatar}</span>
-                            <span className="font-medium text-gray-900">{student.name}</span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 text-gray-600">{student.course}</td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-3">
-                            <div className="w-24 h-2 bg-gray-100 rounded-full">
-                              <div
-                                className="h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
-                                style={{ width: `${student.progress}%` }}
-                              />
-                            </div>
-                            <span className="text-sm font-medium text-gray-700">{student.progress}%</span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className="inline-flex items-center px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-sm">
-                            {student.quizzes}%
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">
-                          <button className="text-blue-600 hover:text-blue-700 flex items-center gap-2">
-                            Profile <ArrowUpRight className="w-4 h-4" />
-                          </button>
-                        </td>
+                {students.length > 0 ? (
+                  <table className="w-full">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-500">Student</th>
+                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-500">Course</th>
+                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-500">Progress</th>
+                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-500">Quizzes</th>
+                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-500">Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                      {students.map((student) => (
+                        <tr key={student.id} className="hover:bg-gray-50 transition-colors">
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-3">
+                              <span className="text-2xl">{student.avatar}</span>
+                              <span className="font-medium text-gray-900">{student.name}</span>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 text-gray-600">{student.course}</td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-3">
+                              <div className="w-24 h-2 bg-gray-100 rounded-full">
+                                <div
+                                  className="h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
+                                  style={{ width: `${student.progress}%` }}
+                                />
+                              </div>
+                              <span className="text-sm font-medium text-gray-700">{student.progress}%</span>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="inline-flex items-center px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-sm">
+                              {student.quizzes}%
+                            </span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <button className="text-blue-600 hover:text-blue-700 flex items-center gap-2">
+                              Profile <ArrowUpRight className="w-4 h-4" />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div className="text-center py-8">
+                    <p className="text-gray-500">No students enrolled yet</p>
+                  </div>
+                )}
               </div>
             )}
           </div>

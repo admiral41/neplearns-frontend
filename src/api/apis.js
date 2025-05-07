@@ -82,3 +82,14 @@ export const deleteAssignmentById = async (assignmentId) => Api.delete(`/api/ass
 // Quiz APIs
 export const createQuiz = async (formData) => Apis.post("/api/quizzes", formData);
 export const deleteQuizById = async (quizId) => Api.delete(`/api/quizzes/${quizId}`);
+export const enrollInCourse = async (courseId) => Api.post(`/api/students/courses/${courseId}/apply`);
+
+// Teacher Enrollment APis
+export const getEnrollmentRequests = async () => Api.get("/api/courses/enrollment-requests");
+export const processEnrollmentRequest = async (requestId, action) => Api.patch(`/api/courses/enrollment-requests/${requestId}`, { action });
+export const getEnrolledStudents = async () => Api.get("/api/courses/enrolled-students");
+
+
+// Student Dashboard
+export const getMyCourses = async () => Api.get("/api/students/courses/my-courses");
+export const getStudentProfile = async () => Api.get("/api/auth/profile");

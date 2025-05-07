@@ -446,7 +446,7 @@ const CreateCourse = () => {
   const [activeTab, setActiveTab] = useState('manage');
 
   return (
-    <div className="p-8 bg-gray-50 min-h-screen">
+    <div className="max-w-9xl mx-auto p-4 bg-gray-50 min-h-screen">
       {activeTab === 'manage' ? (
         <ManageCourses onAddCourse={() => setActiveTab('add')} />
       ) : (
