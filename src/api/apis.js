@@ -56,7 +56,13 @@ export const getStudents = async (page = 1, limit = 10) => Api.get(`/api/auth/st
 export const getTeachers = async (page = 1, limit = 10) => Api.get(`/api/auth/teachers?page=${page}&limit=${limit}`);
 export const approveTeacher = async (teacherId) => Api.post(`/api/auth/approve-teacher/${teacherId}`, {});
 export const getStats = async () => Api.get('/api/auth/stats');
-
+export const forgotPassword = async (data) => {
+  return Api.post("/api/auth/forgotpassword", data);
+}
+// Add this to your existing auth API exports
+export const resetPassword = async (token, password) => {
+  return Api.put(`/api/auth/resetpassword/${token}`, { password });
+};
 // Teacher Dashboard
 export const createCourse = async (formData) => Apis.post("/api/courses/add", formData);
 export const getTeacherCourses = async () => Apis.get("/api/courses/me");
@@ -69,7 +75,34 @@ export const getLessonById = async (lessonId) => Api.get(`/api/lessons/${lessonI
 export const updateLesson = async (lessonId, data) => Api.patch(`/api/lessons/${lessonId}`, data);
 export const deleteLessonById = async (lessonId) => Api.delete(`/api/lessons/${lessonId}`);
 export const getAllCoursesWhy = async () => Api.get("/api/get");
-export const getCourseBySlug  = async (slug) => Api.get(`/api/get/${slug}`);
+export const getCourseBySlug = async (slug) => Api.get(`/api/get/${slug}`);
+export const getQuizzesByCourse = async (courseId) => Api.get(`/api/courses/${courseId}/quizzes`);
+export const getAssignmentsByCourse = async (courseId) => Api.get(`/api/courses/${courseId}/assignments`);
+// Quiz API functions
+
+export const getQuizById = async (quizId) => {
+  const response = await Api.get(`/api/quizzes/${quizId}`);
+  return response.data;
+};
+
+export const updateQuiz = async (quizId, quizData) => {
+  const response = await Api.put(`/api/courses/quizzes/${quizId}`, quizData);
+  return response.data;
+};
+
+
+export const getQuizResults = async (quizId) => {
+  const response = await Api.get(`/api/courses/quizzes/${quizId}/results`);
+  return response.data;
+};
+
+export const getQuizSubmission = async (submissionId, quizId) => {
+  const response = await Api.get(`/api/courses/quizzes/${quizId}/results/${submissionId}`);
+  return response.data;
+};
+// Add these to your existing auth API exports in api.js
+export const updateCourse = async (courseId, formData) => Apis.patch(`/api/courses/${courseId}`, formData);
+export const deleteCourse = async (courseId) => Api.delete(`/api/courses/${courseId}`);
 
 // Assignment APIs
 export const createAssignment = async (formData) => Apis.post("/api/assignments", formData);
@@ -80,7 +113,7 @@ export const gradeAssignment = async (submissionId, gradeData) => Api.patch(`/ap
 export const deleteAssignmentById = async (assignmentId) => Api.delete(`/api/assignments/${assignmentId}`);
 
 // Quiz APIs
-export const createQuiz = async (formData) => Apis.post("/api/quizzes", formData);
+export const createQuiz = async (formData) => Api.post(`/api/courses/quizzes`, formData);
 export const deleteQuizById = async (quizId) => Api.delete(`/api/quizzes/${quizId}`);
 export const enrollInCourse = async (courseId) => Api.post(`/api/students/courses/${courseId}/apply`);
 
@@ -93,3 +126,17 @@ export const getEnrolledStudents = async () => Api.get("/api/courses/enrolled-st
 // Student Dashboard
 export const getMyCourses = async () => Api.get("/api/students/courses/my-courses");
 export const getStudentProfile = async () => Api.get("/api/auth/profile");
+
+
+// Quiz APIs
+export const takeQuiz = async (quizId) => Api.get(`/api/students/quizzes/${quizId}`);
+export const submitQuiz = async (quizId, answers) => {
+  return Api.post(`/api/students/quizzes/${quizId}/submit`, {
+    answers: answers
+  });
+}; export const getQuizResult = async (quizId) => Api.get(`/api/students/quizzes/${quizId}/results`);
+export const getQuizzesByLesson = async (lessonId) => Api.get(`/api/students/lessons/${lessonId}/quizzes`);
+// api/apis.js
+export const getQuizPreview = (quizId) => {
+  return Api.get(`/api/courses/quizzes/${quizId}/preview`);
+};

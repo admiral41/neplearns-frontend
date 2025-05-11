@@ -30,6 +30,15 @@ import AddAssignmentPage from './components/teacher/coursemange/ManagePage/pages
 import LessonDetail from './pages/LessonDetail';
 import StudentOverview from './components/student-dashboard/StudentOverview';
 import YourCoursesPage from './components/student-dashboard/YourCoursesPage';
+import UserSetting from './components/student-dashboard/UserSetting';
+import QuizPlay from './pages/QuizPlay';
+import QuizResults from './pages/QuizResults';
+import ResetPassword from './pages/ResetPassword';
+import QuizEditPage from './components/teacher/coursemange/QuizEditPage';
+import QuizResultsPage from './components/teacher/coursemange/QuizResultsPage';
+import SubmissionDetailPage from './components/teacher/coursemange/QuizPreviewPage';
+import QuizPreviewPage from './components/teacher/coursemange/QuizPreviewPage';
+
 function App() {
   return (
     <>
@@ -46,6 +55,9 @@ function App() {
           <Route path="/course" element={<CoursesPage />} />
           <Route path="/course/:slug" element={<CourseDetail />} />
           <Route path="/course/:slug/lessons/:lessonId" element={<LessonDetail />} />
+          <Route path="/quiz/:quizId" element={<QuizPlay />} />
+          <Route path="/quiz/:quizId/results" element={<QuizResults />} />
+          <Route path="/resetpassword/:resettoken" element={<ResetPassword />} />
           <Route path="/admin" element={
             <ProtectedRoute allowedRoles={['Admin']}>
               <AdminDashboard />
@@ -68,6 +80,9 @@ function App() {
             <Route path="courses/:slug/add-lesson" element={<AddLessonPage />} />
             <Route path="courses/:slug/edit-lesson/:lessonId" element={<EditLessonPage />} />
             <Route path="courses/:slug/add-quiz" element={<QuizBuilder />} />
+            <Route path="courses/:slug/edit-quiz/:quizId" element={<QuizEditPage />} />
+            <Route path="courses/:slug/quiz-results/:quizId" element={<QuizResultsPage />} />
+            <Route path="courses/:slug/preview-quiz/:quizId" element={<QuizPreviewPage />} />
             <Route path="courses/:slug/add-assignment" element={<AddAssignmentPage />} />
 
           </Route>
@@ -76,8 +91,9 @@ function App() {
               <StudentDashboard />
             </ProtectedRoute>
           } >
-          <Route path="dashboard" element={<StudentOverview />} />
-          <Route path="courses" element={<YourCoursesPage />} />
+            <Route path="dashboard" element={<StudentOverview />} />
+            <Route path="courses" element={<YourCoursesPage />} />
+            <Route path="setting" element={<UserSetting />} />
 
           </Route>
 
