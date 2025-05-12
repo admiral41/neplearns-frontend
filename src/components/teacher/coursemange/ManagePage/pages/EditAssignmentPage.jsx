@@ -1,111 +1,126 @@
 import { useState, useEffect } from 'react';
-import { Plus, ChevronLeft } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { ChevronLeft, Save } from 'lucide-react';
 import ContentEditor from '../../../../content_editor/ContentEditor';
-import { 
-  createAssignment, 
+import {
+  getAssignmentWithSubmissions,
+  updateAssignment,
   getTeacherCourse,
   getLessonsByCourse
 } from '../../../../../api/apis';
 import { toast } from 'react-hot-toast';
 
-const AddAssignmentPage = () => {
-  const { slug, lessonId } = useParams();
+const EditAssignmentPage = () => {
+  const { slug, assignmentId } = useParams();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
   const [course, setCourse] = useState(null);
   const [lessons, setLessons] = useState([]);
-  const [loading, setLoading] = useState(true);
-
   const [assignment, setAssignment] = useState({
     title: '',
     description: '',
     instructions: '',
     dueDate: '',
     points: 100,
-    lesson: lessonId || ''
+    lesson: ''
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        
+
         // Fetch course data
         const courseRes = await getTeacherCourse(slug);
         setCourse(courseRes.data.data);
-        
+
         // Fetch lessons for this course
         const lessonsRes = await getLessonsByCourse(courseRes.data.data._id);
         setLessons(lessonsRes.data || []);
-        
-        // If lessonId was provided in URL, verify it exists
-        if (lessonId) {
-          const lessonExists = lessonsRes.data.some(lesson => lesson._id === lessonId);
-          if (!lessonExists) {
-            toast.error('Invalid lesson specified');
-            navigate(`/teacher/courses/${slug}/manage`);
-          }
-        }
+
+        // Fetch assignment data
+        console.log('Fetching assignment with ID:', assignmentId); // Debug log
+        const assignmentRes = await getAssignmentWithSubmissions(assignmentId);
+        console.log('Assignment response:', assignmentRes); // Debug log
+
+        const assignmentData = assignmentRes.data;
+        console.log('Assignment data:', assignmentData); // Debug log
+
+        setAssignment({
+          title: assignmentData.title,
+          description: assignmentData.description || '',
+          instructions: assignmentData.instructions,
+          dueDate: new Date(assignmentData.dueDate).toISOString().slice(0, 16),
+          points: assignmentData.points,
+          lesson: assignmentData.lesson._id
+        });
+
       } catch (err) {
-        toast.error('Failed to load course data');
-        navigate('/teacher/courses');
+        console.error('Error details:', err); // More detailed error logging
+        console.error('Error response:', err.response); // API response if available
+        toast.error(err.response?.data?.message || 'Failed to load assignment data');
+        navigate(`/teacher/courses/${slug}`);
       } finally {
         setLoading(false);
       }
     };
-    
+
     fetchData();
-  }, [slug, lessonId, navigate]);
+  }, [slug, assignmentId, navigate]);
 
   const handleChange = (field, value) => {
     setAssignment(prev => ({ ...prev, [field]: value }));
   };
 
+  // EditAssignmentPage.jsx
   const handleSaveAssignment = async (e) => {
-  e.preventDefault();
-  
-  if (!assignment.lesson) {
-    toast.error('Please select a lesson for this assignment');
-    return;
-  }
+    e.preventDefault();
 
-  if (!assignment.instructions) {
-    toast.error('Please provide assignment instructions');
-    return;
-  }
-
-  try {
-    const response = await createAssignment(assignment.lesson, {
-      title: assignment.title,
-      description: assignment.description,
-      instructions: assignment.instructions,
-      dueDate: assignment.dueDate,
-      points: assignment.points
-    });
-    
-    if (response.data.success) {
-      toast.success('Assignment created successfully!');
-      navigate(`/teacher/courses/${slug}`);
-    } else {
-      toast.error(response.data.message || 'Failed to create assignment');
+    if (!assignment.lesson) {
+      toast.error('Please select a lesson for this assignment');
+      return;
     }
-  } catch (error) {
-    console.error('Error creating assignment:', error);
-    toast.error(error.response?.data?.message || 'Failed to create assignment');
-  }
-};
+
+    if (!assignment.instructions) {
+      toast.error('Please provide assignment instructions');
+      return;
+    }
+
+    try {
+      const response = await updateAssignment(assignmentId, {
+        title: assignment.title,
+        description: assignment.description,
+        instructions: assignment.instructions,
+        dueDate: assignment.dueDate,
+        points: assignment.points,
+        lesson: assignment.lesson
+      });
+
+      if (response.success) {
+  toast.success('Assignment updated successfully!');
+  navigate(`/teacher/courses/${slug}`);
+} else {
+  toast.error(response.message || 'Failed to update assignment');
+}
+
+    } catch (error) {
+      console.error('Error updating assignment:', error);
+      toast.error(error.response?.message || 'Failed to update assignment');
+    }
+  };
+
   if (loading) return <div className="p-6">Loading...</div>;
 
   return (
     <div className="max-w-5xl mx-auto bg-white border rounded-2xl p-6 shadow space-y-10">
       <button
-        onClick={() => navigate(-1)}
+        onClick={() => navigate(`/teacher/courses/${slug}`)}
         className="text-gray-500 flex items-center gap-1 text-sm hover:underline"
       >
-        <ChevronLeft size={16} /> Back
+        <ChevronLeft size={16} /> Back to Course
       </button>
 
-      <h2 className="text-2xl font-semibold text-gray-900">Create New Assignment</h2>
+      <h2 className="text-2xl font-semibold text-gray-900">Edit Assignment</h2>
 
       <form onSubmit={handleSaveAssignment} className="border rounded-xl p-6 space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -192,8 +207,8 @@ const AddAssignmentPage = () => {
             type="submit"
             className="px-6 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors flex items-center gap-2"
           >
-            <Plus size={16} />
-            Create Assignment
+            <Save size={16} />
+            Save Changes
           </button>
         </div>
       </form>
@@ -201,4 +216,4 @@ const AddAssignmentPage = () => {
   );
 };
 
-export default AddAssignmentPage;
+export default EditAssignmentPage;

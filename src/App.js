@@ -38,6 +38,8 @@ import QuizEditPage from './components/teacher/coursemange/QuizEditPage';
 import QuizResultsPage from './components/teacher/coursemange/QuizResultsPage';
 import SubmissionDetailPage from './components/teacher/coursemange/QuizPreviewPage';
 import QuizPreviewPage from './components/teacher/coursemange/QuizPreviewPage';
+import EditAssignmentPage from './components/teacher/coursemange/ManagePage/pages/EditAssignmentPage';
+import AssignmentSubmissionsPage from './components/teacher/coursemange/ManagePage/AssignmentSubmissionsPage ';
 
 function App() {
   return (
@@ -84,7 +86,8 @@ function App() {
             <Route path="courses/:slug/quiz-results/:quizId" element={<QuizResultsPage />} />
             <Route path="courses/:slug/preview-quiz/:quizId" element={<QuizPreviewPage />} />
             <Route path="courses/:slug/add-assignment" element={<AddAssignmentPage />} />
-
+            <Route path="courses/:slug/edit-assignment/:assignmentId" element={<EditAssignmentPage />} />
+            <Route path="courses/:slug/assignment-submissions/:assignmentId" element={<AssignmentSubmissionsPage />}/>
           </Route>
           <Route path="/student" element={
             <ProtectedRoute allowedRoles={['Student']}>

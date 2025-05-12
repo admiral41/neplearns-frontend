@@ -15,6 +15,7 @@ import {
   Eye,
   X,
   Check,
+  File,
 } from 'lucide-react';
 import {
   getTeacherCourse,
@@ -128,7 +129,6 @@ const CourseManagePage = () => {
       try {
         setTabLoading(true);
         const quizzesRes = await getQuizzesByCourse(course._id);
-        console.log('Quizzes:', quizzesRes.data.data);
         setQuizzes(quizzesRes.data.data || []);
       } catch (error) {
         console.error('Error fetching quizzes:', error);
@@ -149,7 +149,7 @@ const CourseManagePage = () => {
       try {
         setTabLoading(true);
         const assignmentsRes = await getAssignmentsByCourse(course._id);
-        setAssignments(assignmentsRes.data || []);
+        setAssignments(assignmentsRes.data.data || []);
       } catch (error) {
         console.error('Error fetching assignments:', error);
         toast.error('Failed to load assignments');
@@ -175,9 +175,9 @@ const CourseManagePage = () => {
     if (!result.isConfirmed) return;
 
     try {
-      // Optimistic update for quizzes
-      if (type === 'quiz') {
-        setQuizzes(prev => prev.filter(q => q._id !== id));
+      // Optimistic update for assignments
+      if (type === 'assignment') {
+        setAssignments(prev => prev.filter(a => a._id !== id));
       }
 
       let apiCall;
@@ -212,7 +212,7 @@ const CourseManagePage = () => {
         setCourse(prev => ({ ...prev, lessons: lessonsRes.data || [] }));
       } else if (type === 'quiz') {
         const quizzesRes = await getQuizzesByCourse(course._id);
-        setQuizzes(quizzesRes.data.data || []); // Note: using data.data
+        setQuizzes(quizzesRes.data.data || []);
       } else if (type === 'assignment') {
         const assignmentsRes = await getAssignmentsByCourse(course._id);
         setAssignments(assignmentsRes.data || []);
@@ -221,9 +221,9 @@ const CourseManagePage = () => {
       toast.success(`${type.charAt(0).toUpperCase() + type.slice(1)} deleted successfully`);
     } catch (error) {
       // Revert optimistic update if deletion failed
-      if (type === 'quiz') {
-        const quizzesRes = await getQuizzesByCourse(course._id);
-        setQuizzes(quizzesRes.data.data || []);
+      if (type === 'assignment') {
+        const assignmentsRes = await getAssignmentsByCourse(course._id);
+        setAssignments(assignmentsRes.data || []);
       }
 
       console.error('Delete error:', error);
@@ -294,32 +294,32 @@ const CourseManagePage = () => {
   };
 
   if (loading) return <div className="p-6">Loading course...</div>;
-  const handleEditQuiz = (quizId) => {
-    navigate(`/teacher/courses/${slug}/edit-quiz/${quizId}`);
+
+  const handleEditAssignment = (assignmentId) => {
+    navigate(`/teacher/courses/${slug}/edit-assignment/${assignmentId}`);
   };
-  const handlePreviewQuiz = (quizId) => {
-  navigate(`/teacher/courses/${slug}/preview-quiz/${quizId}`);
-};
-  const handleViewResults = (quizId) => {
-    const quiz = quizzes.find(q => q._id === quizId);
-    if (quiz?.submissions?.length > 0) {
-      navigate(`/teacher/courses/${slug}/quiz-results/${quizId}`);
-    } else {
-      toast.error('No submissions available for this quiz yet');
-    }
+
+  const handleViewSubmissions = (assignmentId) => {
+    navigate(`/teacher/courses/${slug}/assignment-submissions/${assignmentId}`);
   };
+
+  const handlePreviewAssignment = (assignmentId) => {
+    navigate(`/teacher/courses/${slug}/preview-assignment/${assignmentId}`);
+  };
+
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex justify-between items-start">
+    <div className="p-4 md:p-6 space-y-6">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row justify-between items-start gap-4">
         <Link
           to="/teacher/courses"
-          className="flex items-center text-sm text-gray-500 hover:underline mb-2"
+          className="flex items-center text-sm text-gray-500 hover:underline"
         >
           <ArrowLeft className="w-4 h-4 mr-1" />
           Back to Courses
         </Link>
 
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2 w-full md:w-auto">
           <button
             onClick={() => setShowPreview(true)}
             className="flex items-center gap-1 text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg"
@@ -341,12 +341,14 @@ const CourseManagePage = () => {
         </div>
       </div>
 
+      {/* Course Title */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">{course.title}</h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{course.title}</h1>
         <p className="text-gray-500">{course.subtitle}</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* Metrics Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <MetricCard
           label="Enrolled Students"
           value={course.metrics.enrolled}
@@ -545,15 +547,16 @@ const CourseManagePage = () => {
         </div>
       )}
 
-      <div className="flex justify-between items-center">
-        <div className="flex gap-2 bg-gray-100 rounded-lg p-1">
+      {/* Tabs Section */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div className="flex gap-2 bg-gray-100 rounded-lg p-1 overflow-x-auto w-full md:w-auto">
           {['lessons', 'quizzes', 'assignments', 'students'].map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 text-sm rounded-lg ${activeTab === tab
-                  ? 'bg-white shadow-sm text-gray-900 font-medium'
-                  : 'text-gray-500'
+              className={`px-4 py-2 text-sm rounded-lg whitespace-nowrap ${activeTab === tab
+                ? 'bg-white shadow-sm text-gray-900 font-medium'
+                : 'text-gray-500'
                 }`}
             >
               {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -564,7 +567,7 @@ const CourseManagePage = () => {
         {['lessons', 'quizzes', 'assignments'].includes(activeTab) && (
           <Link
             to={`/teacher/courses/${slug}/add-${tabSingularMap[activeTab].toLowerCase()}`}
-            className="flex items-center gap-1 bg-black text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-800"
+            className="flex items-center gap-1 bg-black text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-800 w-full md:w-auto justify-center"
           >
             <Plus size={16} />
             Add {tabSingularMap[activeTab]}
@@ -572,6 +575,7 @@ const CourseManagePage = () => {
         )}
       </div>
 
+      {/* Tab Content */}
       <div className="mt-4">
         {tabLoading && (
           <div className="text-center p-4">Loading {activeTab}...</div>
@@ -584,9 +588,9 @@ const CourseManagePage = () => {
               course.lessons.map((lesson) => (
                 <div
                   key={lesson._id}
-                  className="bg-white border rounded-xl p-4 flex justify-between items-center shadow-sm"
+                  className="bg-white border rounded-xl p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-sm"
                 >
-                  <div className="space-y-1">
+                  <div className="space-y-1 flex-1">
                     <h4 className="text-md font-semibold">{lesson.title}</h4>
                     <p className="text-sm text-gray-500">{lesson.description}</p>
                     <div className="flex gap-4 text-xs text-gray-400">
@@ -600,7 +604,7 @@ const CourseManagePage = () => {
                       </span>
                     </div>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-wrap">
                     <button
                       onClick={() => navigate(`/teacher/courses/${slug}/edit-lesson/${lesson._id}`)}
                       className="text-blue-600 hover:text-blue-800 flex items-center gap-1"
@@ -633,16 +637,16 @@ const CourseManagePage = () => {
                 return (
                   <div
                     key={quiz._id}
-                    className="bg-white border rounded-xl p-4 flex justify-between items-center shadow-sm"
+                    className="bg-white border rounded-xl p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-sm"
                   >
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
+                    <div className="space-y-1 flex-1">
+                      <div className="flex flex-col md:flex-row md:items-center gap-2">
                         <h4 className="text-md font-semibold">{quiz.title}</h4>
                         <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
                           {quiz.lesson?.title || 'No Lesson'}
                         </span>
                       </div>
-                      <div className="flex gap-4 text-sm text-gray-500">
+                      <div className="flex flex-wrap gap-4 text-sm text-gray-500">
                         <span className="flex items-center gap-1">
                           <Clock size={14} />
                           {quiz.timeLimit} mins
@@ -658,9 +662,9 @@ const CourseManagePage = () => {
                         </span>
                       </div>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 flex-wrap">
                       <button
-                        onClick={() => handleEditQuiz(quiz._id)}
+                        onClick={() => navigate(`/teacher/courses/${slug}/edit-quiz/${quiz._id}`)}
                         className="text-blue-600 hover:text-blue-800 flex items-center gap-1"
                       >
                         <Pencil size={16} /> Edit
@@ -672,17 +676,17 @@ const CourseManagePage = () => {
                         <Trash2 size={16} /> Delete
                       </button>
                       <button
-                        onClick={() => handleViewResults(quiz._id)}
+                        onClick={() => navigate(`/teacher/courses/${slug}/quiz-results/${quiz._id}`)}
                         className={`flex items-center gap-1 ${submissionsCount > 0
-                            ? 'text-green-600 hover:text-green-800'
-                            : 'text-gray-400 cursor-not-allowed'
+                          ? 'text-green-600 hover:text-green-800'
+                          : 'text-gray-400 cursor-not-allowed'
                           }`}
                         disabled={submissionsCount === 0}
                       >
                         <ClipboardList size={16} /> Results
                       </button>
                       <button
-                        onClick={() => handlePreviewQuiz(quiz._id)}
+                        onClick={() => navigate(`/teacher/courses/${slug}/preview-quiz/${quiz._id}`)}
                         className="text-purple-600 hover:text-purple-800 flex items-center gap-1"
                       >
                         <Eye size={16} /> Preview
@@ -706,16 +710,16 @@ const CourseManagePage = () => {
               assignments.map((assignment) => (
                 <div
                   key={assignment._id}
-                  className="bg-white border rounded-xl p-4 flex justify-between items-center shadow-sm"
+                  className="bg-white border rounded-xl p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-sm"
                 >
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
+                  <div className="space-y-1 flex-1">
+                    <div className="flex flex-col md:flex-row md:items-center gap-2">
                       <h4 className="text-md font-semibold">{assignment.title}</h4>
                       <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
                         {assignment.lesson?.title || 'No Lesson'}
                       </span>
                     </div>
-                    <div className="flex gap-4 text-sm text-gray-500">
+                    <div className="flex flex-wrap gap-4 text-sm text-gray-500">
                       <span className="flex items-center gap-1">
                         <Calendar size={14} />
                         Due: {new Date(assignment.dueDate).toLocaleDateString()}
@@ -724,13 +728,14 @@ const CourseManagePage = () => {
                         Points: {assignment.points}
                       </span>
                       <span>
-                        {assignment.attachments?.length || 0} Attachments
+                        {assignment.submissions?.length || 0} Submission
+                        {assignment.submissions?.length !== 1 ? 's' : ''}
                       </span>
                     </div>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-wrap">
                     <button
-                      onClick={() => navigate(`/teacher/courses/${slug}/edit-assignment/${assignment._id}`)}
+                      onClick={() => handleEditAssignment(assignment._id)}
                       className="text-blue-600 hover:text-blue-800 flex items-center gap-1"
                     >
                       <Pencil size={16} /> Edit
@@ -742,11 +747,21 @@ const CourseManagePage = () => {
                       <Trash2 size={16} /> Delete
                     </button>
                     <button
-                      onClick={() => navigate(`/teacher/courses/${slug}/assignment-submissions/${assignment._id}`)}
-                      className="text-green-600 hover:text-green-800 flex items-center gap-1"
+                      onClick={() => handleViewSubmissions(assignment._id)}
+                      className={`flex items-center gap-1 ${assignment.submissions?.length > 0
+                        ? 'text-green-600 hover:text-green-800'
+                        : 'text-gray-400 cursor-not-allowed'
+                        }`}
+                      disabled={!assignment.submissions || assignment.submissions.length === 0}
                     >
-                      <ClipboardList size={16} /> Submissions
+                      <ClipboardList size={16} /> Submissions ({assignment.submissions?.length || 0})
                     </button>
+                    {/* <button
+                      onClick={() => handlePreviewAssignment(assignment._id)}
+                      className="text-purple-600 hover:text-purple-800 flex items-center gap-1"
+                    >
+                      <Eye size={16} /> Preview
+                    </button> */}
                   </div>
                 </div>
               ))
@@ -763,7 +778,7 @@ const CourseManagePage = () => {
             <h3 className="text-lg font-semibold">Enrolled Students</h3>
             {course.enrolledStudents?.length > 0 ? (
               <div className="bg-white border rounded-xl p-4 shadow-sm">
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {course.enrolledStudents.map((student) => (
                     <div key={student._id} className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded">
                       <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">

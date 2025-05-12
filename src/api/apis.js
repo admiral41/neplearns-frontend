@@ -105,13 +105,28 @@ export const updateCourse = async (courseId, formData) => Apis.patch(`/api/cours
 export const deleteCourse = async (courseId) => Api.delete(`/api/courses/${courseId}`);
 
 // Assignment APIs
-export const createAssignment = async (formData) => Apis.post("/api/assignments", formData);
+export const createAssignment = async (lessonId, assignmentData) => Api.post(`/api/courses/lessons/${lessonId}/assignments`, assignmentData);
 export const getAssignmentsByLesson = async (lessonId) => Api.get(`/api/assignments/lesson/${lessonId}`);
 export const submitAssignment = async (assignmentId, formData) => Apis.post(`/api/assignments/${assignmentId}/submit`, formData);
 export const getAssignmentSubmissions = async (assignmentId) => Api.get(`/api/assignments/${assignmentId}/submissions`);
-export const gradeAssignment = async (submissionId, gradeData) => Api.patch(`/api/assignments/submissions/${submissionId}/grade`, gradeData);
 export const deleteAssignmentById = async (assignmentId) => Api.delete(`/api/assignments/${assignmentId}`);
 
+export const updateAssignment = async (assignmentId, assignmentData) => {
+  const response = await Api.patch(`/api/courses/assignments/${assignmentId}`, assignmentData);
+  return response.data;
+}
+export const getAssignmentWithSubmissions = async (assignmentId) => {
+  const response = await Api.get(`/api/courses/assignments/${assignmentId}`);
+  return response.data;
+}
+// In api.js
+export const gradeAssignment = async (assignmentId, submissionId, gradeData) => {
+  const response = await Api.patch(
+    `/api/assignments/${assignmentId}/submissions/${submissionId}/grade`,
+    gradeData
+  );
+  return response.data;
+}
 // Quiz APIs
 export const createQuiz = async (formData) => Api.post(`/api/courses/quizzes`, formData);
 export const deleteQuizById = async (quizId) => Api.delete(`/api/quizzes/${quizId}`);
