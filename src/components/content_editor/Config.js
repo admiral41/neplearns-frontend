@@ -2,9 +2,9 @@
 // const baseUri ="http://localhost:5000/";
 const baseUri ="https://api.neplearns.com";
 
-const IMAGE_UPLOAD_URL = `${baseUri}upload`
-const VIDEO_UPLOAD_URL = `${baseUri}upload`
-const FILE_UPLOAD_URL = `${baseUri}upload`
+const IMAGE_UPLOAD_URL = `${baseUri}/upload`
+const VIDEO_UPLOAD_URL = `${baseUri}/upload`
+const FILE_UPLOAD_URL = `${baseUri}/upload`
 
 export const editorConfig = (allowPaste = true, charCounterMax=10000) => {
 const accessToken = localStorage.getItem('_kh_token_')

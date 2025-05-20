@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { FaUsers, FaRocket, FaHandshake } from "react-icons/fa";
 import img from "../assets/test.png"; // Placeholder image, replace with actual image path
+import ceo from "../assets/ceo.jpg";
 const fadeInUp = {
   initial: { opacity: 0, y: 30 },
   whileInView: { opacity: 1, y: 0, transition: { duration: 0.6 } },
@@ -107,13 +108,13 @@ const AboutUs = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {[
               {
-                name: "Aarav Sharma",
+                name: "Rabin Sahi",
                 role: "Founder & CEO",
-                img: "https://img.freepik.com/free-photo/serious-young-african-man-standing-isolated_171337-9633.jpg?semt=ais_hybrid&w=740",
+                img: ceo,
               },
               {
-                name: "Sita Thapa",
-                role: "Head of Learning",
+                name: "Susan Kafle",
+                role: "CTO",
                 img: "https://img.freepik.com/free-photo/serious-young-african-man-standing-isolated_171337-9633.jpg?semt=ais_hybrid&w=740",
               },
               {
@@ -121,7 +122,8 @@ const AboutUs = () => {
                 role: "Tech Lead",
                 img: "https://img.freepik.com/free-photo/serious-young-african-man-standing-isolated_171337-9633.jpg?semt=ais_hybrid&w=740",
               },
-            ].map((member, index) => (
+            ].map((member,
+               index) => (
               <motion.div
                 {...fadeInUp}
                 key={index}
