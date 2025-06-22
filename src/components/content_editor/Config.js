@@ -85,7 +85,7 @@ const accessToken = localStorage.getItem('_kh_token_')
 			'img-fluid': 'img-fluid',
 		},
 		imageUploadMethod: 'POST',
-		imageUploadParam: 'image',
+		imageUploadParam: 'file',
 		imageUploadParams: {
 			event: 'contents',
 		},
@@ -94,7 +94,7 @@ const accessToken = localStorage.getItem('_kh_token_')
 		videoAllowedTypes: ['mp4', 'webm', 'ogg', 'flv', 'mov', 'wmv', 'avi', 'mpeg', 'mkv'],
 		videoMaxSize: 1024 * 1024 * 100, // 100MB
 		videoUploadMethod: 'POST',
-		videoUploadParam: 'video',
+		videoUploadParam: 'file',
 		videoUploadURL: VIDEO_UPLOAD_URL,
 
 		fileMaxSize: 1024 * 1024 * 50, // 50MB
