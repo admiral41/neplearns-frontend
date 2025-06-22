@@ -40,6 +40,7 @@ import SubmissionDetailPage from './components/teacher/coursemange/QuizPreviewPa
 import QuizPreviewPage from './components/teacher/coursemange/QuizPreviewPage';
 import EditAssignmentPage from './components/teacher/coursemange/ManagePage/pages/EditAssignmentPage';
 import AssignmentSubmissionsPage from './components/teacher/coursemange/ManagePage/AssignmentSubmissionsPage ';
+import CoursesManage from './components/admin/CoursesManage';
 
 function App() {
   return (
@@ -68,6 +69,8 @@ function App() {
             <Route index path='dashboard' element={<AdminOverview />} />
             <Route index path="users" element={<ManageUser />} />
             <Route index path="teachers" element={<ManageTeacher />} />
+            <Route path="setting" element={<UserSetting />} />
+            <Route path="courses" element={<CoursesManage />} />
 
           </Route>
           <Route path="/teacher" element={
@@ -87,7 +90,9 @@ function App() {
             <Route path="courses/:slug/preview-quiz/:quizId" element={<QuizPreviewPage />} />
             <Route path="courses/:slug/add-assignment" element={<AddAssignmentPage />} />
             <Route path="courses/:slug/edit-assignment/:assignmentId" element={<EditAssignmentPage />} />
-            <Route path="courses/:slug/assignment-submissions/:assignmentId" element={<AssignmentSubmissionsPage />}/>
+            <Route path="courses/:slug/assignment-submissions/:assignmentId" element={<AssignmentSubmissionsPage />} />
+            <Route path="setting" element={<UserSetting />} />
+
           </Route>
           <Route path="/student" element={
             <ProtectedRoute allowedRoles={['Student']}>

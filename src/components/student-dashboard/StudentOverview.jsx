@@ -84,7 +84,7 @@ const StudentOverview = () => {
                   <div className="ml-4 flex-1">
                     <div className="flex items-center justify-between">
                       <h3 className="text-lg font-medium text-indigo-600">
-                        <Link to={`/courses/${course._id}`}>{course.title}</Link>
+                        <Link to={`/course/${course.slug}`}>{course.title}</Link>
                       </h3>
                       <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
                         Enrolled
