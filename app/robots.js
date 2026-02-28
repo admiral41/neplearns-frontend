@@ -1,5 +1,5 @@
 export default function robots() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://medhaeclass.com";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://neplearns.com";
 
   return {
     rules: [

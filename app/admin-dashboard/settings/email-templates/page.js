@@ -37,7 +37,7 @@ const emailTemplates = [
     name: "Welcome Email",
     description: "Sent to new users after registration",
     icon: UserPlus,
-    subject: "Welcome to Medha eClass - Let's Start Learning!",
+    subject: "Welcome to NepLearns - Let's Start Learning!",
     variables: ["{{name}}", "{{email}}"],
     lastUpdated: new Date("2024-02-15"),
   },
@@ -46,7 +46,7 @@ const emailTemplates = [
     name: "Password Reset",
     description: "Sent when user requests password reset",
     icon: Key,
-    subject: "Reset Your Medha eClass Password",
+    subject: "Reset Your NepLearns Password",
     variables: ["{{name}}", "{{reset_link}}", "{{expiry_time}}"],
     lastUpdated: new Date("2024-01-20"),
   },
@@ -73,7 +73,7 @@ const emailTemplates = [
     name: "Instructor Approved",
     description: "Sent when instructor application is approved",
     icon: CheckCircle,
-    subject: "Congratulations! You're Now a Medha eClass Instructor",
+    subject: "Congratulations! You're Now a NepLearns Instructor",
     variables: ["{{name}}", "{{dashboard_link}}"],
     lastUpdated: new Date("2024-01-25"),
   },
@@ -118,7 +118,7 @@ export default function EmailTemplatesPage() {
     setSelectedTemplate(template);
     setEditedContent({
       subject: template.subject,
-      body: `Dear {{name}},\n\nThank you for choosing Medha eClass!\n\n[Template content for ${template.name}]\n\nBest regards,\nMedha eClass Team`,
+      body: `Dear {{name}},\n\nThank you for choosing NepLearns!\n\n[Template content for ${template.name}]\n\nBest regards,\nNepLearns Team`,
     });
   };
 

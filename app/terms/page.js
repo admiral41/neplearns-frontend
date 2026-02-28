@@ -206,7 +206,7 @@ export default function TermsAndConditions() {
                 </p>
                 <div className="mt-3 space-y-1 text-muted-foreground">
                   <p>📍 Sahid Marg, Biratnagar, Morang, Nepal</p>
-                  <p>📧 medhaeclass@gmail.com</p>
+                  <p>📧 neplearns@gmail.com</p>
                   <p>📞 +977 986-9906931</p>
                 </div>
               </section>

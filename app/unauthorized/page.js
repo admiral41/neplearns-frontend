@@ -115,8 +115,8 @@ export default function UnauthorizedPage() {
 
             <p className="text-sm text-muted-foreground text-center">
               If you believe this is an error, please contact{" "}
-              <a href="mailto:support@medhaeclass.com" className="text-primary hover:underline">
-                support@medhaeclass.com
+              <a href="mailto:support@neplearns.com" className="text-primary hover:underline">
+                support@neplearns.com
               </a>
             </p>
           </CardContent>

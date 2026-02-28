@@ -176,7 +176,7 @@ export default function PrivacyPolicy() {
                   <li><strong>Data Portability:</strong> Receive your data in a structured format</li>
                 </ul>
                 <p className="text-muted-foreground leading-relaxed mt-3">
-                  To exercise these rights, please contact us at medhaeclass@gmail.com
+                  To exercise these rights, please contact us at neplearns@gmail.com
                 </p>
               </section>
 
@@ -236,8 +236,8 @@ export default function PrivacyPolicy() {
                   If you have any questions or concerns about this Privacy Policy or our data practices, please contact us:
                 </p>
                 <div className="mt-3 space-y-1 text-muted-foreground">
-                  <p>📍 Sahid Marg, Biratnagar, Morang, Nepal</p>
-                  <p>📧 medhaeclass@gmail.com</p>
+                  <p>📍 Kathmandu, Nepal</p>
+                  <p>📧 neplearns@gmail.com</p>
                   <p>📞 +977 986-9906931</p>
                 </div>
               </section>

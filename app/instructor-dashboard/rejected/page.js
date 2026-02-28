@@ -92,7 +92,7 @@ export default function InstructorRejectedPage() {
             </div>
 
             <div className="w-full space-y-2 sm:space-y-3 pt-2">
-              <a href="mailto:support@medhaeclass.com?subject=Instructor Application Feedback" className="block w-full">
+              <a href="mailto:support@neplearns.com?subject=Instructor Application Feedback" className="block w-full">
                 <Button className="w-full" size="default">
                   <Mail className="mr-2 h-4 w-4" />
                   Request Feedback

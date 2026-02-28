@@ -55,7 +55,7 @@ export default function PaymentConfigPage() {
       enabled: true,
       bankName: "NIC Asia Bank",
       accountNumber: "0123456789",
-      accountHolder: "Medha eClass Pvt. Ltd.",
+      accountHolder: "NepLearns Pvt. Ltd.",
     },
   });
 
