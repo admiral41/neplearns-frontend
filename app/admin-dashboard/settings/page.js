@@ -510,10 +510,10 @@ export default function SettingsPage() {
                           whatsapp: e.target.value,
                         })
                       }
-                      placeholder="9779810079323"
+                      placeholder="9779869906931"
                     />
                     <p className="text-xs text-muted-foreground">
-                      Country code without + (e.g., 9779810079323)
+                      Country code without + (e.g., 9779869906931)
                     </p>
                   </div>
                   <div className="space-y-2">

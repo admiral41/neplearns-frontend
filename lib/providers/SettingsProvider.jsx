@@ -17,7 +17,7 @@ const defaultSettings = {
   phones: ['+977 986-9906931'],
   address: 'Kathmandu, Nepal',
   operatingHours: 'Sun - Fri: 6:00 AM - 9:00 PM',
-  whatsapp: '9779810079323',
+  whatsapp: '9779869906931',
   whatsappMessage: 'Hi! I want to know about Neplearns courses for SEE/+2 preparation. Please share course details and fees.',
   socialLinks: {
     facebook: '',
