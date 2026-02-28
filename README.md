@@ -1,70 +1,196 @@
-# Getting Started with Create React App
+# PadhaiHub
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Nepal's #1 Online Learning Platform for SEE and +2 Students
 
-## Available Scripts
+A modern educational landing page built with Next.js 16.0.6, featuring interactive components, smooth animations, and a beautiful gradient design inspired by Nepal's national colors.
 
-In the project directory, you can run:
+## 🎯 About
 
-### `npm start`
+PadhaiHub is a comprehensive learning management system (LMS) landing page designed specifically for Nepali students preparing for SEE (Secondary Education Examination) and +2 exams. The platform offers live interactive classes, expert teachers, and comprehensive study materials.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## ✨ Features
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- 🎨 **Modern UI/UX** - Beautiful gradient designs with Nepal flag colors (Crimson Red & Royal Blue)
+- 📱 **Fully Responsive** - Mobile-first design that works seamlessly across all devices
+- 🎭 **Interactive Animations** - Smooth scroll animations and floating elements
+- 🔄 **Hero Slider** - Auto-playing slider with dynamic gradient backgrounds
+- 📊 **Animated Statistics** - Count-up animations for platform stats
+- 📚 **Course Catalog** - 6+ courses with detailed information and pricing
+- ⭐ **Student Testimonials** - Real success stories from students
+- 📝 **Registration Forms** - Separate forms for students and instructors
+- 🔔 **Toast Notifications** - "Coming Soon" alerts for enrollment
+- 🎨 **Glass-morphism Effects** - Modern frosted glass UI components
 
-### `npm test`
+## 🛠️ Tech Stack
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Next.js 16.0.6** - React framework with App Router
+- **React 19** - UI library
+- **Tailwind CSS** - Utility-first CSS framework
+- **shadcn/ui** - Re-usable component library
+- **Sonner** - Toast notifications
+- **Lucide React** - Icon library
+- **JavaScript (ES6+)** - Programming language
 
-### `npm run build`
+## 🚀 Getting Started
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Prerequisites
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- Node.js 18+
+- npm or yarn or pnpm
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Installation
 
-### `npm run eject`
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd frontend-edu-app
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+2. Install dependencies:
+```bash
+npm install
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3. Run the development server:
+```bash
+npm run dev
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Build for Production
 
-## Learn More
+```bash
+npm run build
+npm start
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 📁 Project Structure
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+frontend-edu-app/
+├── app/
+│   ├── globals.css                    # Global styles with Tailwind & custom animations
+│   ├── layout.js                      # Root layout with Toaster
+│   ├── page.js                        # Landing page
+│   ├── student-registration/          # Student registration form
+│   └── instructor-application/        # Instructor application form
+├── components/
+│   ├── layout/
+│   │   ├── Navbar.jsx                 # Sticky navbar with scroll effects
+│   │   └── Footer.jsx                 # Footer with contact info
+│   ├── sections/
+│   │   ├── HeroSlider.jsx            # Hero section with auto-slider
+│   │   ├── StatsBar.jsx              # Animated statistics section
+│   │   ├── Courses.jsx               # Course cards with toast
+│   │   ├── WhyChooseUs.jsx           # Features section
+│   │   ├── PrivateTutoring.jsx       # 1:1 tutoring service section
+│   │   ├── Testimonials.jsx          # Student testimonials
+│   │   └── InquiryForm.jsx           # Contact/inquiry form
+│   └── ui/                            # shadcn/ui components
+├── lib/
+│   ├── constants/
+│   │   └── data.js                    # All content data (courses, testimonials, etc.)
+│   ├── hooks/
+│   │   └── useIntersectionObserver.js # Custom hook for scroll animations
+│   └── utils.js                       # Utility functions
+├── public/                            # Static assets
+├── components.json                    # shadcn/ui configuration
+├── jsconfig.json                      # JavaScript path aliases
+├── next.config.js                     # Next.js configuration
+├── postcss.config.js                  # PostCSS configuration
+└── tailwind.config.js                 # Tailwind CSS configuration
+```
 
-### Code Splitting
+## 🎨 Design System
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Colors
 
-### Analyzing the Bundle Size
+- **Primary (Crimson Red)**: `hsl(348, 83%, 47%)` - Nepal flag red
+- **Secondary (Royal Blue)**: `hsl(215, 100%, 35%)` - Nepal flag blue
+- **Background**: Light/white tones
+- **Text**: Dark gray for readability
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Gradients
 
-### Making a Progressive Web App
+Three dynamic gradient variations used in the hero slider:
+1. Blue spectrum: `from-[#1e3a5f] via-[#2d5a87] to-[#4a90d9]`
+2. Mixed: `from-primary via-[#1e3a5f] to-secondary`
+3. Dark blue: `from-[#2d5a87] via-[#1e3a5f] to-[#152a45]`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## 📦 shadcn/ui Components Used
 
-### Advanced Configuration
+```bash
+npx shadcn@latest add button
+npx shadcn@latest add card
+npx shadcn@latest add input
+npx shadcn@latest add label
+npx shadcn@latest add badge
+npx shadcn@latest add select
+npx shadcn@latest add textarea
+npx shadcn@latest add checkbox
+npx shadcn@latest add sonner
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## 🌐 Pages
 
-### Deployment
+1. **Landing Page** (`/`) - Main page with all sections
+2. **Student Registration** (`/student-registration`) - Student enrollment form
+3. **Instructor Application** (`/instructor-application`) - Teacher application form
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## 📊 Sections
 
-### `npm run build` fails to minify
+1. **Hero Slider** - Auto-playing slider with 3 slides, CTAs, and floating stat cards
+2. **Stats Bar** - Animated counters showing platform statistics
+3. **Courses** - 6 featured courses with pricing and enrollment buttons
+4. **Why Choose Us** - 6 key features of the platform
+5. **1:1 Private Tutoring** - Premium one-on-one tutoring service with benefits and pricing
+6. **Testimonials** - 4 student success stories
+7. **Inquiry Form** - Contact form for inquiries
+8. **Footer** - Contact information and social links
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 🎯 Key Features Implemented
+
+- Smooth scroll navigation
+- Intersection Observer animations
+- Auto-playing hero slider (5s interval)
+- Count-up animations for statistics
+- Toast notifications for "Coming Soon" features
+- Glass-morphism effects
+- Floating card animations
+- Responsive design for all screen sizes
+- Nepal-themed color scheme
+
+## 📝 Content
+
+All content data is centralized in `lib/constants/data.js`:
+- Hero slides
+- Platform statistics
+- Course information
+- Testimonials
+- Features
+- Contact information
+- Navigation links
+
+## 🔮 Future Enhancements
+
+- User authentication
+- Course enrollment system
+- Payment integration
+- Student dashboard
+- Live class integration
+- Video lessons
+- Practice tests
+- Progress tracking
+
+## 📄 License
+
+This project is created for PadhaiHub.
+
+## 🤝 Contributing
+
+For any suggestions or improvements, please create an issue or pull request.
+
+---
+
+**Built with ❤️ for Nepali students**
