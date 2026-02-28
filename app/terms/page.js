@@ -205,7 +205,7 @@ export default function TermsAndConditions() {
                   If you have any questions about these Terms and Conditions, please contact us:
                 </p>
                 <div className="mt-3 space-y-1 text-muted-foreground">
-                  <p>📍 Sahid Marg, Biratnagar, Morang, Nepal</p>
+                  <p>📍 Kathmandu, Nepal</p>
                   <p>📧 neplearns@gmail.com</p>
                   <p>📞 +977 986-9906931</p>
                 </div>
