@@ -165,10 +165,10 @@ export default function Navbar() {
                     variant="outline"
                     size="sm"
                     className={cn(
-                      "text-sm",
+                      "text-sm text-black", 
                       isScrolled
-                        ? "border-slate-200 text-slate-600 hover:bg-slate-50"
-                        : "border-white/30 text-white hover:bg-white/10"
+                        ? "border-slate-200 hover:bg-slate-50"
+                        : "border-white/30 hover:bg-white/10"
                     )}
                   >
                     Login
