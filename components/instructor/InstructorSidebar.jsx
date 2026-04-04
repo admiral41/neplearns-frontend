@@ -178,11 +178,11 @@ function SidebarContent({ onLinkClick }) {
       {/* Logo/Brand */}
       <div className="px-4 py-5 border-b">
         <div className="flex items-center gap-2">
-          <img
+          {/* <img
             src={getLogoUrl()}
             alt={`${getPlatformName()} Logo`}
             className="w-10 h-10 rounded-lg object-contain"
-          />
+          /> */}
           <div>
             <h2 className="text-lg font-bold text-primary">{getPlatformName()}</h2>
             <p className="text-xs text-muted-foreground">Instructor Portal</p>

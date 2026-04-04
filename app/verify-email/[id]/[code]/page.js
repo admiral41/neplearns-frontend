@@ -72,13 +72,13 @@ export default function VerifyEmailPage() {
       <div className="absolute top-0 left-0 right-0 p-6 z-50">
         <div className="container mx-auto flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="relative h-10 w-10 md:h-12 md:w-12 hover:scale-110 transition-transform">
+            {/* <div className="relative h-10 w-10 md:h-12 md:w-12 hover:scale-110 transition-transform">
               <img
                 src={getLogoUrl()}
                 alt={`${getPlatformName()} Logo`}
                 className="w-full h-full object-contain"
               />
-            </div>
+            </div> */}
             <span className="text-2xl font-bold text-white">{getPlatformName()}</span>
           </Link>
         </div>

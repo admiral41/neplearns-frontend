@@ -48,13 +48,13 @@ export default function InstructorPendingPage() {
       <div className="absolute top-0 left-0 right-0 p-4 sm:p-6 z-50">
         <div className="container mx-auto flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="relative h-8 w-8 sm:h-10 sm:w-10 hover:scale-110 transition-transform">
+            {/* <div className="relative h-8 w-8 sm:h-10 sm:w-10 hover:scale-110 transition-transform">
               <img
                 src={getLogoUrl()}
                 alt={`${getPlatformName()} Logo`}
                 className="w-full h-full object-contain"
               />
-            </div>
+            </div> */}
             <span className="text-lg sm:text-xl font-bold text-white">{getPlatformName()}</span>
           </Link>
         </div>
